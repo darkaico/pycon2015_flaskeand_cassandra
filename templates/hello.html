@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+
+    <link href="{{ url_for('static', filename='css/bootstrap.min.css') }}" rel="stylesheet">
+</head>
+<body>
+	<div class="container">
+
+		<div class="page-header">
+			<h1>Flaskeando Cassandra</h1>
+			<p class="lead"></p>
+		</div>
+
+		<div class="row">
+            <div class="col-md-1"><label>Keyspace:</label></div>
+            <div class="col-md-2"><input class="keyspace_name"></div>
+            <div class="col-md-2"><a class="btn btn-danger keyspace_btn">Create</a></div>
+            <div class="col-md-2"><p class="keyspace_message"></p></div>
+		</div>
+        <hr>
+        <div class="row">
+            <div class="col-md-2"><a class="btn btn-danger model_btn">Create Model</a></div>
+            <div class="col-md-2"><p class="model_message"></p></div>
+        </div>
+        <hr>
+        <div class="row">
+            <div class="col-md-1"><label>Brand:</label></div>
+            <div class="col-md-2"><input class="beer_brand"></div>
+            <div class="col-md-2"><a class="btn btn-danger beer_btn">Cheers</a></div>
+            <div class="col-md-8"><p class="beer_message"></p></div>
+        </div>
+	</div>
+
+<script type="text/javascript" src="{{ url_for('static', filename='js/jquery-2.1.4.min.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
+
+<script type="text/javascript">
+	$(function() {
+
+    $('.keyspace_btn').click(function() {
+        $btn = $('.keyspace_btn');
+        $.ajax({
+            url: '/create/keyspace',
+            data: {
+                keyspace: $('.keyspace_name').val()
+            },
+            type: 'POST',
+            success: function(response) {
+                json_response = JSON.parse(response);
+                $('.keyspace_message').text(json_response.message);
+            },
+            error: function(error) {
+                console.log(error);
+            }
+        });
+    });
+
+    $('.model_btn').click(function() {
+        $btn = $('.model_btn');
+        $.ajax({
+            url: '/create/model',
+            data: {
+                keyspace: $('.keyspace_name').val()
+            },
+            type: 'POST',
+            success: function(response) {
+                json_response = JSON.parse(response);
+                $('.model_message').text(json_response.message);
+            },
+            error: function(error) {
+                console.log(error);
+            }
+        });
+    });
+
+    $('.beer_btn').click(function() {
+        $btn = $('.model_btn');
+        $.ajax({
+            url: '/beer',
+            data: {
+                brand: $('.beer_brand').val(),
+                keyspace: $('.keyspace_name').val()
+            },
+            type: 'POST',
+            success: function(response) {
+
+                json_response = JSON.parse(response);
+                $('.beer_message').append('<br>');
+                $('.beer_message').append(response);
+            },
+            error: function(error) {
+                console.log(error);
+            }
+        });
+    });
+
+
+});
+</script>
+
+</body>
+</html>
